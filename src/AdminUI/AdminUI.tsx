@@ -4,10 +4,10 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
-import useApiService from "../hooks/useApiService";
 import usePaginatedList from "../hooks/usePaginatedList";
 import usePagination from "../hooks/usePagination";
 
@@ -34,10 +34,6 @@ type TUser = {
 const AdminUI = () => {
   const PAGE_SIZE = 10;
 
-  const { loading, data, error } = useApiService<TUser[]>(
-    "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json"
-  );
-
   const { paginatedList, updateList, updateCurrentPage } =
     usePaginatedList<TUser>({
       pageSize: PAGE_SIZE,
@@ -58,7 +54,12 @@ const AdminUI = () => {
     canGoFirst,
   } = usePagination({ pageSize: PAGE_SIZE });
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [original, setOriginal] = useState<TUser[]>([]);
+
   const [list, setList] = useState<TUser[]>([]);
   const [searchText, setSearchText] = useState("");
 
@@ -72,11 +73,45 @@ const AdminUI = () => {
     [list]
   );
 
-  useEffect(() => {
-    if (data) {
-      setOriginal(data);
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
+    try {
+      const response = await fetch(
+        "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json",
+        { signal: abortController.signal }
+      );
+
+      if (!response.ok) {
+        throw new Error(response.statusText || "Something went wrong!");
+      }
+
+      setOriginal(await response.json());
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") {
+        console.log("Request aborted");
+        return;
+      }
+
+      setError(
+        err instanceof Error ? err.message : "Error while fetching the data"
+      );
+    } finally {
+      setLoading(false);
     }
-  }, [data]);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort(); // Abort on unmount
+      }
+    };
+  }, [fetchData]);
 
   useEffect(() => {
     if (original) {
@@ -316,7 +351,7 @@ const AdminUI = () => {
                 </tr>
               ))}
 
-            {!loading && list.length === 0 && (
+            {!loading && searchText.length > 0 && list.length === 0 && (
               <tr>
                 <td colSpan={5} className="table-no-data">
                   No results based on the search
