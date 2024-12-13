@@ -1,0 +1,172 @@
+button {
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  padding: 0 16px;
+}
+
+button:hover,
+button.pagination.highlight {
+  border-color: #a2a6fb;
+}
+
+button.icon,
+button.pagination {
+  width: 50px;
+  padding: 0;
+}
+
+button.table-action {
+  background-color: unset;
+  border: none;
+}
+
+button.table-action:hover {
+  background-color: #2a2a2a;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+button:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+  color: unset;
+  cursor: not-allowed;
+}
+
+.delete-selected {
+  color: red;
+}
+
+input[type="text"],
+select {
+  padding: 8px 16px;
+  outline: none;
+}
+
+.search-container {
+  display: inline-flex;
+  align-items: center;
+}
+
+.search-container > input {
+  width: 300px;
+  border: none;
+  background: transparent;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  height: 640px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-filters {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: #1a1a1a;
+}
+
+.table-no-data {
+  text-align: center;
+}
+
+.table-no-data:hover {
+  background-color: unset;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+tbody {
+  overflow-y: scroll;
+}
+
+th,
+td {
+  text-align: left;
+  white-space: nowrap;
+  padding: 4px 8px;
+}
+
+tr,
+td {
+  height: 50px;
+}
+
+th {
+  background-color: #333;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+th > input[type="checkbox"],
+td > input[type="checkbox"] {
+  margin: 8px 16px;
+}
+
+tr:nth-child(odd) {
+  background-color: #262626;
+}
+
+tr.selected,
+tr:hover {
+  background-color: #262626;
+}
+
+.pagination-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  position: relative;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 600px) {
+  button {
+    height: 36px;
+  }
+
+  button.icon,
+  button.pagination {
+    width: 36px;
+  }
+
+  input[type="text"] {
+    height: 36px;
+    padding: 4px 8px;
+  }
+
+  select {
+    height: 48px;
+    padding: 4px 8px;
+  }
+
+  th,
+  td {
+    padding: 4px 8px;
+    font-size: 0.9em;
+  }
+}
