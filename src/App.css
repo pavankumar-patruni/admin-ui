@@ -5,3 +5,13 @@
 .admin-panel h1 {
   margin-bottom: 32px;
 }
+
+@media screen and (max-width: 600px) {
+  .admin-panel {
+    padding: 16px;
+  }
+
+  .admin-panel h1 {
+    margin-bottom: 16px;
+  }
+}
